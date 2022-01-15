@@ -1,0 +1,21 @@
+.juejin-miming-container {
+  background-color: pink;
+  border: 1px solid rgb(246, 74, 103);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 200px;
+}
+
+.juejin-miming-controls {
+  display: flex;
+  justify-content: space-around;
+}
+
+.juejin-miming-cmd {
+  display: flex;
+  flex-direction: column;
+}
+
+.juejin-miming-btn {
+}
