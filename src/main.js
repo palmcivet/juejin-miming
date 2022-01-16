@@ -1,30 +1,21 @@
-// ==UserScript==
-// @name         掘金挖矿脚本
-// @namespace    https://github.com/palmcivet
-// @version      0.0.1
-// @description  参考自：https://juejin.cn/post/7047688281693585415
-// @author       Palm Civet
-// @match        https://juejin.cn/game/haidijuejin/*
-// @icon         https://juejin.cn/game/haidijuejin/favicon.8a39f.ico
-// @grant        none
-// ==/UserScript==
-
 (function () {
   "use strict";
 
   const CLASS_NAME = "juejin-miming";
   const API_USER = "https://api.juejin.cn/user_api/v1/user/get";
-  const API_GAME_COMMAND = "https://juejin-game.bytedance.com/game/sea-gold/game/command";
+  const API_GAME_BASE = "https://juejin-game.bytedance.com/game/sea-gold";
+  const API_GAME_COMMAND = `${API_GAME_BASE}/game/command`;
+  const API_GAME_START = `${API_GAME_BASE}/game/start`; // { roleId: 1 }
+  const API_GAME_OVER = `${API_GAME_BASE}/game/over`; // { isButton: 1 }
 
   /* 获取 UID */
-  async function getUid() {
+  async function getUserInfo() {
     try {
       const result = await fetch(API_USER, {
         credentials: "include",
       });
       const data = await result.json();
-      // 更新时间：2022-01-17
-      return data.profile_id;
+      return data.data;
     } catch (error) {
       throw error;
     }
@@ -43,12 +34,7 @@
    * @param {number} param.commandStep 0-4
    * @returns 执行接口的返回值
    */
-  async function gameCommand({
-    uid = "",
-    authorization = "",
-    gameid = "",
-    commandStep = 0,
-  }) {
+  async function gameCommand({ uid = "", authorization = "", gameId = "", commandStep = 0 }) {
     const commandArr = [
       // 开局往左
       [{ times: 2, command: ["2", "L", "D", "L", "4", "D", "6", "R", "D", "R"] }],
@@ -184,7 +170,7 @@
     _params = null;
 
     const datarus = await fetch(
-      `${API_GAME_COMMAND}?uid=${uid}&${(time = Date.parse(new Date()))}`,
+      `${API_GAME_COMMAND}?uid=${uid}&time=${Date.parse(new Date().toString())}`,
       {
         method: "POST",
         credentials: "include",
@@ -192,8 +178,8 @@
           "Content-type": "application/json; charset=UTF-8",
           "authorization": authorization,
           "accept": "application/json, text/plain, */*",
-          "content-length": JSON.stringify(params).length,
-          "x-tt-gameid": gameid,
+          "content-length": JSON.stringify(params).length.toString(),
+          "x-tt-gameid": gameId,
         },
         body: JSON.stringify(params),
       }
@@ -202,67 +188,110 @@
     return datarus.json();
   }
 
-  /* 迈出第一步，同时获取信息 */
-  async function firstCommand() {}
-
   /* 注入 CSS */
   function injectStyle() {
     const styleDOM = document.createElement("style");
-    styleDOM.id = "${CLASS_NAME}-style";
-    styleDOM.innerHTML = ``;
+    styleDOM.id = `${CLASS_NAME}-style`;
+    styleDOM.innerHTML = __STYLE_TEXT;
     document.head.append(styleDOM);
   }
 
   /* 注入控件 */
   function injectControls() {
-    const container = document.createElement("div");
-    container.className = `${CLASS_NAME}-container`;
-    container.innerHTML = `
-<div class="${CLASS_NAME}-info">
-    <input class="${CLASS_NAME}-uid" type="text" placeholder="uid" />
-    <input class="${CLASS_NAME}-authorization" type="text" placeholder="authorization" />
-    <input class="${CLASS_NAME}-gameid" type="text" placeholder="gameid" />
-</div>
-<form class="${CLASS_NAME}-cmd">
-    <div>
-        <input type="radio" name="命令" id="${CLASS_NAME}-cmd-0" value="0" />
-        <label for="${CLASS_NAME}-cmd-0">0：开局往左</label>
-    </div>
-    <div>
-        <input type="radio" name="命令" id="${CLASS_NAME}-cmd-1" value="1" />
-        <label for="${CLASS_NAME}-cmd-1">1：开局往右</label>
-    </div>
-    <div>
-        <input type="radio" name="命令" id="${CLASS_NAME}-cmd-2" value="2" />
-        <label for="${CLASS_NAME}-cmd-2">2：中期</label>
-    </div>
-    <div>
-        <input type="radio" name="命令" id="${CLASS_NAME}-cmd-3" value="3" />
-        <label for="${CLASS_NAME}-cmd-3">3：后期飞翔</label>
-    </div>
-    <div>
-        <input type="radio" name="命令" id="${CLASS_NAME}-cmd-4" value="4" />
-        <label for="${CLASS_NAME}-cmd-4">4：后期扫荡</label>
-    </div>
-
-    <button type="submit" class="${CLASS_NAME}-btn">执行</button>
-</form>
-<div class="${CLASS_NAME}-result"></div>
-`;
-
-    const btn = container.children.item(1);
-    btn.onclick = () => {
-      gameCommand({
-        uid: document.querySelector(`.${CLASS_NAME}-uid`).value,
-        authorization: document.querySelector(`.${CLASS_NAME}-authorization`).value,
-        gameid: document.querySelector(`.${CLASS_NAME}-gameid`).value,
-      });
-    };
-
     const root = document.querySelector("#Cocos2dGameContainer");
+    const container = document.createElement("div");
+    container.className = `${CLASS_NAME}-script`;
+    container.innerHTML = __TEMPLATE_TEXT;
     root.appendChild(container);
   }
 
-  setTimeout(injectStyle);
-  setTimeout(injectControls, 10000);
+  /* 以下为执行代码 */
+
+  /* 注入 XHR 拦截器 */
+  (function (context) {
+    context.rewriteXHR = {
+      cachedProto: function () {
+        this._originXhr = context.XMLHttpRequest.prototype;
+        this._originOpen = this._originXhr.open;
+        this._originSend = this._originXhr.send;
+        this._originSetRequestHeader = this._originXhr.setRequestHeader;
+      },
+      overWrite: function () {
+        const _this = this;
+        this._originXhr.open = function () {
+          this.open_args = [...arguments];
+          return _this._originOpen.apply(this, arguments);
+        };
+        this._originXhr.send = function () {
+          return _this._originSend.apply(this, arguments);
+        };
+        this._originXhr.setRequestHeader = function () {
+          const url = this.open_args && this.open_args[1];
+
+          if (url.startsWith(API_GAME_BASE)) {
+            const headerKey = arguments[0];
+
+            if (/^x-tt-gameid$/.test(headerKey)) {
+              console.log("game", arguments[1]);
+              localStorage.setItem(`${CLASS_NAME}-gameid`, arguments[1]);
+            }
+
+            if (/^Authorization$/.test(headerKey)) {
+              console.log("auth", arguments[1]);
+              localStorage.setItem(`${CLASS_NAME}-authid`, arguments[1]);
+            }
+          }
+
+          return _this._originSetRequestHeader.apply(this, arguments);
+        };
+      },
+      init: function () {
+        this.cachedProto();
+        this.overWrite();
+      },
+    };
+    context.rewriteXHR.init();
+  })(window);
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("controls", {
+      form: {
+        uid: "",
+        gameId: "",
+        authorization: "",
+        commandStep: 0,
+      },
+      message: "",
+
+      onChange(value) {
+        Alpine.store("controls").form.commandStep = value;
+      },
+
+      async onSubmit() {
+        const result = await gameCommand({
+          ...Alpine.store("controls").form,
+        });
+
+        // 更新时间：2021-01-16
+        const { message } = result;
+
+        Alpine.store("controls").message = message;
+      },
+    });
+
+    console.info("== Juejin miming script ==");
+  });
+
+  const _onload = window.onload || function () {};
+  window.onload = async (event) => {
+    _onload(event);
+    injectStyle();
+    injectControls();
+    // 更新时间：2022-01-16
+    const { user_id, user_name } = await getUserInfo();
+    Alpine.store("controls").form.uid = user_id;
+    Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
+    Alpine.store("controls").form.authorization = localStorage.getItem(`${CLASS_NAME}-authid`);
+    console.log("== Juejin miming ==");
+  };
 })();

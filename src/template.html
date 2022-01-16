@@ -1,0 +1,65 @@
+<div class="juejin-miming-controls" x-data>
+  <div>
+    <input type="text" x-model="$store.controls.form.uid" placeholder="uid" />
+    <input
+      type="text"
+      x-model="$store.controls.form.authorization"
+      placeholder="authorization"
+    />
+    <input type="text" x-model="$store.controls.form.gameId" placeholder="gameId" />
+  </div>
+
+  <label>
+    <input
+      type="radio"
+      value="0"
+      name="commandStep"
+      @change="$store.controls.onChange(0)"
+    />
+    0：开局往左
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="1"
+      name="commandStep"
+      @change="$store.controls.onChange(1)"
+    />
+    1：开局往右
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="2"
+      name="commandStep"
+      @change="$store.controls.onChange(2)"
+    />
+    2：中期
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="3"
+      name="commandStep"
+      @change="$store.controls.onChange(3)"
+    />
+    3：后期飞翔
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="4"
+      name="commandStep"
+      @change="$store.controls.onChange(4)"
+    />
+    4：后期扫荡
+  </label>
+
+  <button class="juejin-miming-btn" @click="$store.controls.onSubmit()">执行</button>
+
+  <div class="juejin-miming-msg" x-text="$store.controls.message"></div>
+</div>

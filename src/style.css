@@ -1,15 +1,21 @@
-.juejin-miming-container {
-  background-color: pink;
-  border: 1px solid rgb(246, 74, 103);
+.juejin-miming-controls {
+  background-color: #3c7eff;
+  border: 2px solid #bedaff;
+  border-radius: 5px;
   position: absolute;
   right: 10px;
   top: 10px;
   width: 200px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
 }
 
-.juejin-miming-controls {
-  display: flex;
-  justify-content: space-around;
+.juejin-miming-controls label {
+  list-style: none;
+  width: 100%;
 }
 
 .juejin-miming-cmd {
