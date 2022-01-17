@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub
+        uses: actions/checkout@master
+      - name: Install and Build
+        run: |
+          yarn
+          yarn build
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.2.2
+        with:
+          branch: gh-pages
+          folder: docs
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            /docs/index.js

@@ -7,22 +7,27 @@ export default defineConfig({
   esbuild: {
     banner: `/* eslint-disable */
 // ==UserScript==
-// @name         掘金挖矿脚本
+// @name         海底掘金
 // @namespace    ${pkg.repository}
 // @version      ${pkg.version}
+// @license      ${pkg.license}
 // @description  参考：
-// @description  1. https://juejin.cn/post/7047688281693585415
-// @description  2. https://juejin.cn/post/7019704757556084750
 // @author       ${pkg.author}
 // @match        https://juejin.cn/game/haidijuejin/*
-// @icon         https://juejin.cn/game/haidijuejin/favicon.8a39f.ico
 // @require      https://unpkg.com/alpinejs@3.8/dist/cdn.min.js
+// @updateURL    ${pkg.homepage}/index.js
 // @grant        none
 // ==/UserScript==`,
   },
   build: {
+    outDir: "docs",
     minify: false,
     polyfillModulePreload: false,
+    rollupOptions: {
+      output: {
+        entryFileNames: `[name].js`,
+      },
+    },
   },
   plugins: [
     resolvePlain({

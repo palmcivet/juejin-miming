@@ -1,8 +1,11 @@
 {
   "name": "juejin-miming",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Palm Civet",
   "repository": "https://github.com/palmcivet/juejin-miming",
+  "homepage": "https://palmcivet.github.io/juejin-miming",
+  "bugs": "https://github.com/palmcivet/juejin-miming/issues",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
