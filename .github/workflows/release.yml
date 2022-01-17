@@ -1,4 +1,4 @@
-name: CI
+name: Release
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
           yarn
           yarn build
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.2.2
+        uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: gh-pages
           folder: docs

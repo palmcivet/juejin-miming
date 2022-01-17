@@ -11,7 +11,7 @@ export default defineConfig({
 // @namespace    ${pkg.repository}
 // @version      ${pkg.version}
 // @license      ${pkg.license}
-// @description  参考：
+// @description  这是一个针对 海底掘金活动 编写的油猴脚本，实现了用户信息的自动获取和掘进方式的高效的选择，不用手动拼接代码。
 // @author       ${pkg.author}
 // @match        https://juejin.cn/game/haidijuejin/*
 // @require      https://unpkg.com/alpinejs@3.8/dist/cdn.min.js
