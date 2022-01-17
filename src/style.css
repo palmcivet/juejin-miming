@@ -1,27 +1,85 @@
+:root {
+  --radius: 6px;
+  --padding: 10px;
+  --primary-color: #3c7eff;
+}
+
 .juejin-miming-controls {
   background-color: #3c7eff;
   border: 2px solid #bedaff;
-  border-radius: 5px;
+  border-radius: var(--radius);
   position: absolute;
   right: 10px;
   top: 10px;
   width: 200px;
-  padding: 10px;
+  padding: var(--padding);
   display: flex;
   flex-direction: column;
   align-items: center;
   color: white;
 }
 
-.juejin-miming-controls label {
-  list-style: none;
+.juejin-miming-controls h2 {
+  margin: var(--padding) 0;
+}
+
+.juejin-miming-controls a {
+  color: white;
+}
+
+.juejin-miming-info input[type="text"] {
+  font-family: monospace, "Courier New", Courier;
   width: 100%;
+  font-size: 15px;
+  height: 28px;
+  border: 0;
+  outline: 0;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  border-radius: calc(var(--radius) / 2);
+  margin: 2px 0;
+  padding: 0 4px;
 }
 
 .juejin-miming-cmd {
+  margin: var(--padding) 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
+}
+
+.juejin-miming-cmd label {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-family: monospace, "Courier New", Courier;
+}
+
+.juejin-miming-cmd input[type="radio"] {
+  cursor: pointer;
+  padding: 0;
+  width: 17px;
+  height: 17px;
+  margin: 0 5px 0 5px;
 }
 
 .juejin-miming-btn {
+  color: #1d4dd2;
+  background-color: white;
+  border: 2px solid #1d4dd2;
+  width: 80px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: calc(var(--radius) / 2);
+}
+
+.juejin-miming-btn:hover {
+  color: white;
+  background-color: #1d4dd2;
+  border: 2px solid white;
 }

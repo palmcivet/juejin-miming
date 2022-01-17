@@ -30,7 +30,7 @@
    * - 4:后期扫荡
    * @param {string} param.uid 你的 uid
    * @param {string} param.authorization request header 中的 authorization
-   * @param {string} param.gameid request header 中的 x-tt-gameid
+   * @param {string} param.gameId request header 中的 x-tt-gameid
    * @param {number} param.commandStep 0-4
    * @returns 执行接口的返回值
    */
@@ -259,7 +259,7 @@
         uid: "",
         gameId: "",
         authorization: "",
-        commandStep: 0,
+        commandStep: "0",
       },
       message: "",
 
@@ -272,7 +272,7 @@
           ...Alpine.store("controls").form,
         });
 
-        // 更新时间：2021-01-16
+        // 更新时间：2021-01-17
         const { message } = result;
 
         Alpine.store("controls").message = message;
@@ -285,10 +285,11 @@
   const _onload = window.onload || function () {};
   window.onload = async (event) => {
     _onload(event);
-    injectStyle();
-    injectControls();
-    // 更新时间：2022-01-16
-    const { user_id, user_name } = await getUserInfo();
+    setTimeout(injectStyle);
+    setTimeout(injectControls, 8000);
+
+    // 更新时间：2022-01-17
+    const { user_id } = await getUserInfo();
     Alpine.store("controls").form.uid = user_id;
     Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
     Alpine.store("controls").form.authorization = localStorage.getItem(`${CLASS_NAME}-authid`);
