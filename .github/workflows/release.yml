@@ -19,9 +19,9 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: gh-pages
-          folder: docs
+          folder: dist
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            /docs/index.js
+            /dist/index.js

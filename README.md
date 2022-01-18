@@ -7,6 +7,8 @@
 - [2022年了，你还在手动挖矿吗？3分钟海底掘金直通攻略](https://juejin.cn/post/7047688281693585415)
 - [Javascript 如何全面接管xhr请求](https://juejin.cn/post/7019704757556084750)
 
+> 此脚本只是方便执行代码，并没有自动化挖矿哦~
+
 ## 安装
 
 - [Release](https://github.com/palmcivet/juejin-miming/releases)

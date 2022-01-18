@@ -268,13 +268,14 @@
       },
 
       async onSubmit() {
+        Alpine.store("controls").message = "";
+
         const result = await gameCommand({
           ...Alpine.store("controls").form,
         });
 
         // 更新时间：2021-01-17
         const { message } = result;
-
         Alpine.store("controls").message = message;
       },
     });

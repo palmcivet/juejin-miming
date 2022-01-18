@@ -20,7 +20,6 @@ export default defineConfig({
 // ==/UserScript==`,
   },
   build: {
-    outDir: "docs",
     minify: false,
     polyfillModulePreload: false,
     rollupOptions: {
