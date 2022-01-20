@@ -2,9 +2,9 @@
 // ==UserScript==
 // @name         海底掘金
 // @namespace    https://github.com/palmcivet/juejin-miming
-// @version      0.0.3
+// @version      0.0.4
 // @license      MIT
-// @description  这是一个针对 海底掘金活动 编写的油猴脚本，实现了用户信息的自动获取和掘进方式的高效的选择，不用手动拼接代码。
+// @description  这是一个针对 海底掘金活动 编写的油猴脚本，实现了用户信息的自动获取和掘进方式的高效的选择。
 // @author       Palm Civet
 // @match        https://juejin.cn/game/haidijuejin/*
 // @require      https://unpkg.com/alpinejs@3.8/dist/cdn.min.js
@@ -355,12 +355,12 @@ var __spreadValues = (a, b) => {
           if (url.startsWith(API_GAME_BASE)) {
             const headerKey = arguments[0];
             if (/^x-tt-gameid$/.test(headerKey)) {
-              console.log("game", arguments[1]);
               localStorage.setItem(`${CLASS_NAME}-gameid`, arguments[1]);
+              Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
             }
             if (/^Authorization$/.test(headerKey)) {
-              console.log("auth", arguments[1]);
               localStorage.setItem(`${CLASS_NAME}-authid`, arguments[1]);
+              Alpine.store("controls").form.authorization = localStorage.getItem(`${CLASS_NAME}-authid`);
             }
           }
           return _this._originSetRequestHeader.apply(this, arguments);
@@ -392,7 +392,7 @@ var __spreadValues = (a, b) => {
         Alpine.store("controls").message = message;
       }
     });
-    console.info("== Juejin miming script ==");
+    console.info("== Juejin miming: inject ==");
   });
   const _onload = window.onload || function() {
   };
@@ -404,6 +404,6 @@ var __spreadValues = (a, b) => {
     Alpine.store("controls").form.uid = user_id;
     Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
     Alpine.store("controls").form.authorization = localStorage.getItem(`${CLASS_NAME}-authid`);
-    console.log("== Juejin miming ==");
+    console.log("== Juejin miming: enjoy ==");
   };
 })();
