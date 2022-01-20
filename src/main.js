@@ -7,8 +7,9 @@
   const API_GAME_COMMAND = `${API_GAME_BASE}/game/command`;
   const API_GAME_START = `${API_GAME_BASE}/game/start`; // { roleId: 1 }
   const API_GAME_OVER = `${API_GAME_BASE}/game/over`; // { isButton: 1 }
+  const API_GAME_INFO = `${API_GAME_BASE}/game/info`;
 
-  /* 获取 UID */
+  /* 获取用户信息 */
   async function getUserInfo() {
     try {
       const result = await fetch(API_USER, {
@@ -232,13 +233,15 @@
             const headerKey = arguments[0];
 
             if (/^x-tt-gameid$/.test(headerKey)) {
-              console.log("game", arguments[1]);
               localStorage.setItem(`${CLASS_NAME}-gameid`, arguments[1]);
+              Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
             }
 
             if (/^Authorization$/.test(headerKey)) {
-              console.log("auth", arguments[1]);
               localStorage.setItem(`${CLASS_NAME}-authid`, arguments[1]);
+              Alpine.store("controls").form.authorization = localStorage.getItem(
+                `${CLASS_NAME}-authid`
+              );
             }
           }
 
@@ -280,7 +283,7 @@
       },
     });
 
-    console.info("== Juejin miming script ==");
+    console.info("== Juejin miming: inject ==");
   });
 
   const _onload = window.onload || function () {};
@@ -294,6 +297,6 @@
     Alpine.store("controls").form.uid = user_id;
     Alpine.store("controls").form.gameId = localStorage.getItem(`${CLASS_NAME}-gameid`);
     Alpine.store("controls").form.authorization = localStorage.getItem(`${CLASS_NAME}-authid`);
-    console.log("== Juejin miming ==");
+    console.log("== Juejin miming: enjoy ==");
   };
 })();
